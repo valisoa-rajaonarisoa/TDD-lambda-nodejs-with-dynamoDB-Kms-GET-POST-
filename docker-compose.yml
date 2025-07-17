@@ -1,0 +1,16 @@
+
+services:
+  localstack:
+    image: localstack/localstack:latest
+    container_name: localstack
+    ports:
+      - "4566:4566"  # Port principal pour interagir avec LocalStack
+      - "4571:4571"  # Port pour S3
+    environment:
+      - DOCKER_HOST=unix:///var/run/docker.sock
+      - LOCALSTACK_SERVICES=lambda,s3,sqs,sns,apigateway,iam,dynamodb,events,kms  # Liste des services que vous souhaitez activer
+      - DEBUG=1  # Active le mode débogage (optionnel)
+    volumes:
+      - "./localstack_data:/var/lib/localstack"  # Monte un volume local pour persister les données
+      - "/var/run/docker.sock:/var/run/docker.sock"  # Permet à LocalStack d'utiliser Docker
+    restart: unless-stopped  # Redémarre automatiquement sauf si explicitement arrêté
